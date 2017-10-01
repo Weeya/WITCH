@@ -25,7 +25,7 @@ class GameWindow(arcade.Window):
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT)
 
         self.wizard = ModelSprite('image/w3.png',model=self.world.wizard)
-        self.wizard.set_position(250,100)
+        self.wizard.set_position(0,0)
 
     
     def update(self, delta):
