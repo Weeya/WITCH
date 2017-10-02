@@ -35,6 +35,8 @@ class GameWindow(arcade.Window):
         arcade.start_render()
         self.wizard.draw() 
     
+    def on_key_press(self, key, key_modifiers):
+        self.world.on_key_press(key, key_modifiers)
 
 def main():
     window = GameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
