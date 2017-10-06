@@ -8,9 +8,17 @@ DIR_OFFSET = { D_UP: (0,1),
                D_RIGHT: (1,0),
                D_DOWN: (0,-1),
                D_LEFT: (-1,0) }
+'''
+class Model:
+    def __init__(self, world, x, y, angle):
+        self.world = world
+        self.x = x
+        self.y = y
+        self.angle = 0
+'''
 class Wizard:
-    WAIT = 0.2
-    step = 5
+    WAIT = 0
+    step = 6
     def __init__(self, world, x, y):
         self.world = world
         self.x = x
@@ -25,9 +33,8 @@ class Wizard:
         if self.wait_time < Wizard.WAIT:
             return
         
-           
         self.x = (self.x + 5*DIR_OFFSET[self.direction][0])%self.world.width 
-        #self.y = (self.y + 5*DIR_OFFSET[self.direction][1])%self.world.width
+       
         '''
         if self.x >= self.world.width:
             self.x = 0
@@ -37,12 +44,14 @@ class Wizard:
         '''
         self.wait_time = 0
 
+
 class World:
     def __init__(self, width, height):
         self.width = width
         self.height = height
 
         self.wizard = Wizard(self, 250, 130)
+        #self.candy = Candy(self, 250, 300)
 
     def update(self, delta):
         self.wizard.update(delta)
@@ -52,5 +61,6 @@ class World:
             self.wizard.direction = D_RIGHT
         elif key == arcade.key.LEFT:
             self.wizard.direction = D_LEFT
-
-
+        elif key == arcade.key.UP:
+            self.wizard.direction = D_UP #break!!
+            #self.snake.direction = D_DOWN
