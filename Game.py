@@ -7,10 +7,9 @@ SCREEN_HEIGHT = 620
 Scaling = 0.4
 class Candy(arcade.Sprite):
     def reset_pos(self):
-        self.center_y = randint(700,1000)
-        self.center_x = randint(0,SCREEN_WIDTH)
+        self.center_y = randint(SCREEN_HEIGHT,1000)
+        self.center_x = randint(10,SCREEN_WIDTH-10)
         #self.center_y = randint(SCREEN_HEIGHT + 10,SCREEN_HEIGHT + 100)
-        #self.center_x = randint(0,SCREEN_WIDTH)
     
     def update(self):
         
@@ -60,8 +59,8 @@ class GameWindow(arcade.Window):
 
         for i in range(15):
             candy = Candy('image/candy.png',Scaling)
-            candy.center_x = randint(0,SCREEN_WIDTH)
-            candy.center_y = randint(100,SCREEN_HEIGHT)
+            candy.center_x = randint(10,SCREEN_WIDTH-10)
+            candy.center_y = randint(150,SCREEN_HEIGHT)
     
             self.all_sprites_list.append(candy)
             self.candy_list.append(candy)
