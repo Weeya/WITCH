@@ -35,16 +35,6 @@ class Bomb(arcade.Sprite):
         self.center_y -= 3  #speed of bomb
         if self.top < 0:
             self.reset_pos()
-'''
-class Snow:
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-        
-    def reset_pos(self):
-        self.y = randint(SCREEN_HEIGHT, SCREEN_HEIGHT+100)
-        self.x = randint(0,SCREEN_WIDTH)
-''' 
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
@@ -70,11 +60,10 @@ class GameWindow(arcade.Window):
         self.imagewiz = ['image/w3.png','image/left.png','image/right.png']
         self.wizard = ModelSprite(self.imagewiz[0],model=self.world.wizard)
         
-        self.all_sprites_list = None
-        self.candy_list = None
-        self.sweet_list = None
-        self.bomb_list = None
-        #self.snow_list = None
+        self.all_sprites_list = []
+        self.candy_list = []
+        self.sweet_list = []
+        self.bomb_list = []
     
         self.score = 0
         
@@ -86,16 +75,16 @@ class GameWindow(arcade.Window):
 
         for i in range(5):
             candy = Candy('image/candy.png',Scaling)
-            candy.center_x = randint(10,SCREEN_WIDTH-10)
-            candy.center_y = randint(1,SCREEN_HEIGHT)
-
+            #candy.center_x = randint(10,SCREEN_WIDTH-10)
+            #candy.center_y = randint(1,SCREEN_HEIGHT)
+            #print(candy.center_x)
             self.all_sprites_list.append(candy)
             self.candy_list.append(candy)
         
         for i in range(1):
             sweet = Sweet('image/sweet.png',0.5)
-            sweet.center_x = randint(10,SCREEN_WIDTH-10)
-            sweet.center_y = randint(600,SCREEN_HEIGHT)
+            #sweet.center_x = randint(10,SCREEN_WIDTH-10)
+            #sweet.center_y = randint(600,SCREEN_HEIGHT)
     
             self.all_sprites_list.append(sweet)
             self.sweet_list.append(sweet)
@@ -107,59 +96,32 @@ class GameWindow(arcade.Window):
     
             self.all_sprites_list.append(bomb)
             self.bomb_list.append(bomb)
-    '''
-    def start_falling(self):
-        self.snow_list = []
 
-        for i in range(50):
-            snow = Snow()
-            snow.x = randint(0,SCREEN_WIDTH)
-            snow.y = randint(0,SCREEN_HEIGHT + 200)
-            
-            snow.size = randint(0,4)
-            snow.speed = randint(20,40)
-
-            self.snow_list.append(snow)
-    '''
     def update(self, delta):
         self.world.update(delta)
         self.wizard = ModelSprite(self.imagewiz[self.world.status],model=self.world.wizard)
         self.all_sprites_list.update()
+        for candy in self.candy_list:
+            if(candy.center_x-30<=self.world.wizard.x<=candy.center_x+30 and candy.center_y<=140):
+                print("in")
+                self.score += 1
+                self.candy_list.pop()
+                #self.candy_list.remove(candy)
+                #candy.center_x = randint(SCREEN_HEIGHT,1200)
+                #candy.center_y = randint(5,SCREEN_WIDTH-5)
         '''
-        if self.wizard.hit(self.candy,10):
-            self.candy.random_location()
-            self.score += 1
-        '''
-        if((Candy.center_x==self.world.wizard.x) and (Candy.center_y==self.world.wizard.y)):
-            print(Candy.center_x)
-        hit_list_candy = arcade.check_for_collision_with_list(self.wizard,self.candy_list)
-        hit_list_sweet = arcade.check_for_collision_with_list(self.wizard,self.sweet_list)
-        hit_list_bomb = arcade.check_for_collision_with_list(self.wizard,self.bomb_list)
-
-        for candy in hit_list_candy:
-            candy.reset_pos()
-            self.score += 1
-    
-        for sweet in hit_list_sweet:
-            sweet.reset_pos()
-            self.score += 2
-        
-        for bomb in hit_list_bomb:
-            bomb.reset_pos()
+        elif((self.sweet_list[0].center_x-30<=self.world.wizard.x<=self.sweet_list[0].center_x+30) and (self.sweet_list[0].center_y<=140)):
             print("in")
-            if(self.score>=10):
-                self.score -= 10
-            elif(self.score-10<=0):
-                self.score = 0
-
+            self.score += 2
+            self.sweet_list[0].center_x = randint(SCREEN_HEIGHT,1000)
+            self.sweet_list[0].center_y = randint(5,SCREEN_WIDTH-5)
+            
+        elif((self.bomb_list[0].center_x-30<=self.world.wizard.x<=self.bomb_list[0].center_x+30) and (self.bomb_list[0].center_y<=140)):
+            print("in")
+            self.score = 0
+            self.bomb_list[0].center_x = randint(SCREEN_HEIGHT,1200)
+            self.bomb_list[0].center_y = randint(5,SCREEN_WIDTH-5)
         '''
-        for snow in self.snow_list:
-            snow.y -= snow.speed * delta
-
-            if snow.y < 0:
-                snow.reset_pos()
-        '''
-        
     def on_draw(self):
         
         arcade.start_render()
@@ -168,10 +130,6 @@ class GameWindow(arcade.Window):
         
         self.all_sprites_list.draw()
 
-        '''
-        for snow in self.snow_list:
-            arcade.draw_circle_filled(snow.x, snow.y,snow.size, arcade.color.WHITE)
-        '''
         output = "Score: {}".format(self.score)
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 16)
         
@@ -182,7 +140,6 @@ class GameWindow(arcade.Window):
 
 def main():
     window = GameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
-    #window.start_falling()
     window.candy_falling()
     arcade.set_window(window)
     arcade.run()
