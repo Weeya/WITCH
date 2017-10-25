@@ -3,7 +3,7 @@ import arcade.key
 from random import randint
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 620
-SPEED = 5
+SPEED = 7
 class Wizard:
     def __init__(self, world, x, y):
         self.world = world
@@ -50,6 +50,7 @@ class Sweet(arcade.Sprite):
             self.reset_pos()  
 
 class Bomb(arcade.Sprite):
+    Speed_Bomb = 3
     def __init__(self, link, scale):
         super().__init__(link,scale)
         self.center_y = randint(SCREEN_HEIGHT,1000)
@@ -59,7 +60,7 @@ class Bomb(arcade.Sprite):
         self.center_x = randint(5,SCREEN_WIDTH-5)
 
     def update(self):
-        self.center_y -= 3  #speed of bomb
+        self.center_y -= self.Speed_Bomb  #speed of bomb
         if self.top < 0:
             self.reset_pos()
 

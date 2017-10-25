@@ -21,7 +21,7 @@ class ModelSprite(arcade.Sprite):
 
 class GameWindow(arcade.Window):
     def __init__(self,width,height):
-        super().__init__(width, height)
+        super().__init__(width, height,title = "Wizard Candy")
  
         self.background = None 
         self.background = arcade.load_texture('image/bg2.jpg')
@@ -35,7 +35,7 @@ class GameWindow(arcade.Window):
         self.bomb_list = arcade.SpriteList()
         self.berry_list = arcade.SpriteList()
 
-        self.gameover = arcade.Sprite('image/gameover.png')
+        self.gameover = arcade.Sprite('image/gameover.png',0.8)
         self.gameover.set_position(SCREEN_WIDTH//2,SCREEN_HEIGHT//2)
         self.gameover_status = False
         
@@ -67,49 +67,57 @@ class GameWindow(arcade.Window):
         self.world.update(delta)
         self.wizard = ModelSprite(self.imagewiz[self.world.status],model=self.world.wizard)
         
-        for candy in self.candy_list:
-            if(candy.center_x-30<=self.world.wizard.x<=candy.center_x+30 and candy.center_y<=140):
-                
-                self.score += 1
-                candy.center_x = randint(SCREEN_HEIGHT,1200)
-                candy.center_y = randint(5,SCREEN_WIDTH-5)
+        if not self.gameover_status :
+            for candy in self.candy_list:
+                if(candy.center_x-30<=self.world.wizard.x<=candy.center_x+30 and candy.center_y<=140):
+                    
+                    self.score += 1
+                    candy.center_x = randint(SCREEN_HEIGHT,1200)
+                    candy.center_y = randint(5,SCREEN_WIDTH-5)
       
-        for sweet in self.sweet_list:
-            if(sweet.center_x-30<=self.world.wizard.x<=sweet.center_x+30 and sweet.center_y<=140):
-                
-                self.score += 2
-                sweet.center_x = randint(SCREEN_HEIGHT,2000)
-                sweet.center_y = randint(5,SCREEN_WIDTH-5) 
+            for sweet in self.sweet_list:
+                if(sweet.center_x-30<=self.world.wizard.x<=sweet.center_x+30 and sweet.center_y<=140):
+                    
+                    self.score += 3
+                    sweet.center_x = randint(SCREEN_HEIGHT,2000)
+                    sweet.center_y = randint(5,SCREEN_WIDTH-5) 
 
-        for berry in self.berry_list:
-            if(berry.center_x-30<=self.world.wizard.x<=berry.center_x+30 and berry.center_y<=140):
-                Candy.Speed_Candy *= 2
-                self.score += 2
-                berry.center_x = randint(SCREEN_HEIGHT,2000)
-                berry.center_y = randint(5,SCREEN_WIDTH-5) 
+            for berry in self.berry_list:
+                if(berry.center_x-30<=self.world.wizard.x<=berry.center_x+30 and berry.center_y<=140):
+                    Candy.Speed_Candy *= 2
+                    Bomb.Speed_Bomb *= 1.5
+                    self.score += 10
+                    berry.center_x = randint(SCREEN_HEIGHT,2000)
+                    berry.center_y = randint(5,SCREEN_WIDTH-5) 
             
-        for bomb in self.bomb_list:
-            if(bomb.center_x-30<=self.world.wizard.x<=bomb.center_x+30 and bomb.center_y<=140):
-                
-                self.gameover_status = True
+            for bomb in self.bomb_list:
+                if(bomb.center_x-30<=self.world.wizard.x<=bomb.center_x+30 and bomb.center_y<=140):
+                    bomb.center_x = randint(SCREEN_HEIGHT,2000)
+                    bomb.center_y = randint(5,SCREEN_WIDTH-5) 
+                    self.gameover_status = True
 
-        for sprite in self.all_sprites_list:
-            sprite.update()
+            for sprite in self.all_sprites_list:
+                sprite.update()
 
+        self.Last_Score = self.score
     def on_draw(self):
         arcade.start_render()
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
         self.wizard.draw() 
         
-        output = "Score: {}".format(self.score)
-        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 16)
+        
         
         for sprite in self.all_sprites_list:
             sprite.draw()
+        if self.gameover_status == False:
+            output = "Score: {}".format(self.score)
+            arcade.draw_text(output, 10, 20, arcade.color.WHITE, 16)
 
-        if self.gameover_status == True:
+        elif self.gameover_status == True:
             self.gameover.draw()
-                
+            output = "Score: {}".format(self.Last_Score)
+            arcade.draw_text(output, 10, 20, arcade.color.WHITE, 16)
+            
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key)
     def on_key_release(self, key, key_modifiers):
